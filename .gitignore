@@ -1,4 +1,5 @@
 **/.DS_Store
+.idea
 extension/.idea
 server/env
 server/node_modules

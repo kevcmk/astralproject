@@ -27,7 +27,14 @@ function getOrCreateScript() {
 function callback(fileText) {
     const script = getOrCreateScript();
     console.log(`Updating at ${new Date()}`);
-    script.textContent = `firepad.setText(\`${fileText}\`);document.getElementById("run").click()`;
+    if (fileText.includes("`")) {
+        
+        alert("Warning: filetext contains the tilde character.  Removing it!")
+    }
+    //const tildeEscapedFileText = fileText.replace("`", "\\\\`")
+    const tildeEscapedFileText = fileText.replace("`", "");
+    //script.textContent = `firepad.setText(\`${fileText}\`);document.getElementById("run").click()`;
+    script.textContent = `firepad.setText(String.raw\`${tildeEscapedFileText}\`);document.getElementById("run").click()`;
 }
 
 (async function() {
@@ -36,11 +43,14 @@ function callback(fileText) {
     console.log(socket.id); // undefined
 
     socket.on('connect', () => {
-        console.log(socket.id); // 'G5p5...'
+        console.log(`[Connected] on Socket ID: ${socket.id}`); // 'G5p5...'
     });
+
     socket.on('server', (data) => {
-        console.log('server')
-        console.log(data)
+        const summary = data.text.length > 128 ?
+            `${data.text.substring(0,64)}...\n...${data.text.substring(data.text.length - 64)}` :
+            data.text
+        console.log(`Received data: ${summary}`)
         callback(data.text)
     });
 

@@ -1,7 +1,7 @@
 var io = require('socket.io')(80);
 var fs = require('fs');
 
-const configFilename = 'file.txt'
+const configFilename = process.argv[2]
 io.sockets.on('connection', function (socket) {
     console.log(`Connected: ${socket.id}`)
     emitFile(configFilename)
@@ -12,14 +12,10 @@ fs.watch(configFilename, {encoding: 'buffer'}, function (eventType, filename) {
 
     if (eventType === "change") {
         console.log(`${filename} changed at ${new Date().toTimeString()}, reading...`)
-
-        emitFile(filename)
-
-
+        emitFile(configFilename)
     } else {
         console.log(`Unhandled event, ${eventType}, skipping.`)
         console.log(`Filename: ${filename}`)
-
     }
 
 })

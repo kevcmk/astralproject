@@ -1,0 +1,42 @@
+import types
+
+
+class SinglyLinkedList:
+    def __init__(self, x, n):
+        self.x = x
+        self.next = n
+
+
+class SinglyLinkedListIterator():
+
+    def __init__(self, l):
+        self.l = l
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        emit = self.l
+        if emit is None:
+            raise StopIteration
+        else:
+            self.l = self.l.next
+            return emit.x
+
+
+def singly_linked_list_generator(sll: SinglyLinkedList):
+    ref = sll
+    while ref is not None:
+        yield ref.x
+        ref = ref.next
+
+
+l = SinglyLinkedList(1, SinglyLinkedList(2, SinglyLinkedList(5, None)))
+it = SinglyLinkedListIterator(l)
+
+for i in it:
+    print(i)
+
+g = singly_linked_list_generator(l)
+for i in g:
+    print(i)
